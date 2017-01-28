@@ -56,16 +56,18 @@ class StatePlayer(SimplState):
        
    def cbButtonNext(self):
        super(StatePlayer, self).cbButtonNext()
-       self.music_player.playNext()
+       self.music_player.play_next()
                     
    def cbButtonPrevious(self):
        super(StatePlayer, self).cbButtonPrevious()
-       self.music_player.playPrevious()
+       self.music_player.play_previous()
        
    def cbButtonNumber(self, number):
        super(StatePlayer, self).cbButtonNumber(number)
+       self.music_player.pause()
        self._speaker.say(str(number))
-       self.music_player.switchToFolder('01-Test')
+       self.music_player.switch_to_folder('01-Test')
+       self.music_player.play()
           
 class StatePaused(StatePlayer):
    def cbButtonStop(self):

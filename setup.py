@@ -17,7 +17,7 @@ config = {
     'download_url': 'https://github.com/titiwu/simpl',
     'author_email': 'matthias.busl@gmail.com',
     'version': '0.1',
-    'install_requires': ['nose'],
+    'install_requires': ['nose',  'mpd'],
     'packages': ['simpl'],
     'scripts': [],
     'name': 'simpl'
