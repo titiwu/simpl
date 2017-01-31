@@ -25,7 +25,7 @@ class MusicPlayer(object):
 
     def play(self):
         """Play track"""
-        self._client.play(1)
+        self._client.play(0)
 
     def pause(self):
         """Pause playing"""
@@ -38,10 +38,12 @@ class MusicPlayer(object):
     def play_previous(self):
         """Play previous song"""
         self._client.previous()
+        
+    def clear_playlist(self):
+        self._client.clear()
 
     def switch_to_folder(self, folder):
         """Change folder"""
-        self._client.clear()
         self._client.add(folder)
         self.play()
 
