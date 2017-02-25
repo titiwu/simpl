@@ -14,7 +14,7 @@ def main (args=None):
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
 
-    simple_statemachine = simpl_state.StatePlayer()
+    simple_statemachine = simpl_state.StatePlaying()
     bridge_to_keyboard.BridgeToKeyboard(simple_statemachine)
 
 if __name__ == "__main__":
