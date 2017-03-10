@@ -22,20 +22,23 @@ class BridgeToGpio(object):
      GPIO
      OUT
     """
-    COL__INPUT_BMC_NR = (12, 16, 20, 21)
-    ROW__OUTPUT_BMC_NR = (6, 13, 19, 26)
+    COL_INPUT_BMC_NR = (12, 16, 20, 21)
+    ROW_OUTPUT_BMC_NR = (6, 13, 19, 26)
     
-    def __init__(self, simpl_statemachine):
+    def __init__(self):
         self._logger = logging.getLogger(__name__)
         # use Broadcom pin numbering convention
         GPIO.setmode(GPIO.BCM)
         # Set up the GPIO channels - one input and one output
-        GPIO.setup(self.COL__INPUT_BMC_NR, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(self.COL_INPUT_BMC_NR, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(self.ROW_OUTPUT_BMC_NR, GPIO.OUT)
         # Setting the output
         GPIO.output(self.ROW_OUTPUT_BMC_NR, GPIO.LOW)
         # Adding events
-        GPIO.add_event_detect(self.COL_INPUT_BMC_NR, GPIO.FALLING, callback=self.button_in_col_pressed,  bouncetime=200)
+        GPIO.add_event_detect(self.COL_INPUT_BMC_NR[0], GPIO.FALLING, callback=self.button_in_col_pressed,  bouncetime=200)
+        GPIO.add_event_detect(self.COL_INPUT_BMC_NR[1], GPIO.FALLING, callback=self.button_in_col_pressed,  bouncetime=200)
+        GPIO.add_event_detect(self.COL_INPUT_BMC_NR[2], GPIO.FALLING, callback=self.button_in_col_pressed,  bouncetime=200)
+        GPIO.add_event_detect(self.COL_INPUT_BMC_NR[3], GPIO.FALLING, callback=self.button_in_col_pressed,  bouncetime=200)
         self._logger.debug('GPIO setup done')
 
     def button_in_col_pressed(self,  channel):
@@ -45,8 +48,8 @@ class BridgeToGpio(object):
             GPIO.output(self.ROW_OUTPUT_BMC_NR[row_nr], GPIO.HIGH)
             time.sleep(0.02)
             if GPIO.input(channel):
-                col = self.COL__INPUT_BMC_NR.index(channel)
-                button_nr = row_nr * len(self.COL__INPUT_BMC_NR) + col +1
+                col = self.COL_INPUT_BMC_NR.index(channel)
+                button_nr = row_nr * len(self.COL_INPUT_BMC_NR) + col +1
                 self._logger.debug('Button Nr is'+str(button_nr))
                 break
         GPIO.output(self.ROW_OUTPUT_BMC_NR, GPIO.LOW)
