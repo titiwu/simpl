@@ -35,22 +35,22 @@ class BridgeToGpio(object):
         # Setting the output
         GPIO.output(self.ROW_OUTPUT_BMC_NR, GPIO.LOW)
         # Adding events
-        GPIO.add_event_detect(self.COL_INPUT_BMC_NR[0], GPIO.FALLING, callback=self.button_in_col_pressed,  bouncetime=200)
-        GPIO.add_event_detect(self.COL_INPUT_BMC_NR[1], GPIO.FALLING, callback=self.button_in_col_pressed,  bouncetime=200)
-        GPIO.add_event_detect(self.COL_INPUT_BMC_NR[2], GPIO.FALLING, callback=self.button_in_col_pressed,  bouncetime=200)
-        GPIO.add_event_detect(self.COL_INPUT_BMC_NR[3], GPIO.FALLING, callback=self.button_in_col_pressed,  bouncetime=200)
+        GPIO.add_event_detect(self.COL_INPUT_BMC_NR[0], GPIO.FALLING, callback=self.button_in_col_pressed,  bouncetime=300)
+        GPIO.add_event_detect(self.COL_INPUT_BMC_NR[1], GPIO.FALLING, callback=self.button_in_col_pressed,  bouncetime=300)
+        GPIO.add_event_detect(self.COL_INPUT_BMC_NR[2], GPIO.FALLING, callback=self.button_in_col_pressed,  bouncetime=300)
+        GPIO.add_event_detect(self.COL_INPUT_BMC_NR[3], GPIO.FALLING, callback=self.button_in_col_pressed,  bouncetime=300)
         self._logger.debug('GPIO setup done')
 
     def button_in_col_pressed(self,  channel):
         ''' Set rows high one by one to see when the input disapears '''
-        self._logger.debug('Event on input'+str(channel))
-        for row_nr in range(0, len(self.ROW_OUTPUT_BMC_NR)-1):
+        self._logger.debug('Event on input '+str(channel))
+        for row_nr in range(0, len(self.ROW_OUTPUT_BMC_NR)):
             GPIO.output(self.ROW_OUTPUT_BMC_NR[row_nr], GPIO.HIGH)
             time.sleep(0.02)
             if GPIO.input(channel):
                 col = self.COL_INPUT_BMC_NR.index(channel)
                 button_nr = row_nr * len(self.COL_INPUT_BMC_NR) + col +1
-                self._logger.debug('Button Nr is'+str(button_nr))
+                self._logger.debug('Button Nr is '+str(button_nr))
                 break
         GPIO.output(self.ROW_OUTPUT_BMC_NR, GPIO.LOW)
         #TODO Setters for callback functions for each button number
@@ -71,8 +71,9 @@ if __name__ == "__main__":
     logger.setLevel(logging.DEBUG)
     
     SimplGpio = BridgeToGpio()
+
     try:
         while(True):
             time.sleep(1);
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, SystemExit):
         SimplGpio.delete()       # clean up GPIO on CTRL+C exit
