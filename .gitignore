@@ -84,6 +84,14 @@ ENV/
 
 # Spyder project settings
 .spyderproject
+simpl_sypder_session
 
 # Rope project settings
 .ropeproject
+
+# PyCharm Project settings
+.idea
+
+# Eric Project settings
+.eric5project
+simpl.e4p

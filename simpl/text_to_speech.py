@@ -12,7 +12,7 @@ import tempfile
 import subprocess
 import pipes
 
-import diagnose
+from . import diagnose
 
 
 class TextToSpeech(object):
@@ -65,6 +65,7 @@ class TextToSpeech(object):
         self._logger.debug("Canceling text output")
         pass
         # TODO
+
 
 if __name__ == "__main__":
     logger = logging.getLogger(__name__)

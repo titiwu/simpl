@@ -8,6 +8,7 @@ Created on Thu Jan 19 21:43:33 2017
 
 import tkinter as tk
 
+
 class BridgeToKeyboard(object):
     def __init__(self, simpl_statemachine):
         self._simpl = simpl_statemachine
@@ -17,15 +18,15 @@ class BridgeToKeyboard(object):
         self.text.pack()
         root.bind('<KeyPress>', self.onKeyPress)
         root.mainloop()
-        
-    def onKeyPress(self, event):
-        self.text.insert('end', 'You pressed %s\n' % (event.char, ))
+
+    def on_key_press(self, event):
+        self.text.insert('end', 'You pressed %s\n' % (event.char,))
         x = event.char
-        if(x.isdigit()):
+        if (x.isdigit()):
             self._simpl.cbButtonNumber(int(x))
-        elif(x == 'p'):
+        elif (x == 'p'):
             self._simpl.cbButtonPlay()
-        elif(x == 's'):
+        elif (x == 's'):
             self._simpl.cbButtonStop()
         elif event.keysym == 'Left':
             self._simpl.cbButtonPrevious()
@@ -33,10 +34,7 @@ class BridgeToKeyboard(object):
             self._simpl.cbButtonNext()
         elif event.keysym == 'Up':
             self._simpl.cbButtonRiseVolume()
-        elif event.keysym =='Down':
+        elif event.keysym == 'Down':
             self._simpl.cbButtonLowerVolume()
         else:
             pass
-        
-        
-

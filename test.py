@@ -4,15 +4,9 @@ This is a test file
 """
 
 import logging
-
-import os
 import sys
-
-lib_path = os.path.abspath('./simpl')
-sys.path.insert(0,lib_path)
-
-import simpl_state
-import bridge_to_keyboard
+import simpl.simpl_state
+import simpl.bridge_to_keyboard
 
 
 logger = logging.getLogger(__name__)
@@ -23,6 +17,6 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 
-simple_statemachine = simpl_state.StatePlayer()
-keyboard_watcher = bridge_to_keyboard.BridgeToKeyboard(simple_statemachine)
+simple_statemachine = simpl.simpl_state.StatePlaying()
+keyboard_watcher = simpl.bridge_to_keyboard.BridgeToKeyboard(simple_statemachine)
 

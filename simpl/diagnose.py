@@ -14,8 +14,6 @@ if sys.version_info < (3, 3):
 else:
     from shutil import which as find_executable
 
-logger = logging.getLogger(__name__)
-
 
 def check_network_connection(server="www.google.com"):
     """
