@@ -18,3 +18,26 @@ TODO: Add configuration
 
 - Raspberry Pi GPIO Access: [RPi.GPIO](https://sourceforge.net/projects/raspberry-gpio-python/)
 - MPD-Control: [python-mpd2](https://github.com/Mic92/python-mpd2) 
+
+## Configuratiom
+
+### MPD
+
+Dmix allows mixing of speech synthesis messages and music.
+
+The software mixer allows volume control via MPD interface.
+
+```
+audio_output {
+        type            "alsa"
+        name            "dmixer"
+#        options         "dev=dmixer"
+#        device          "plug:dmix"
+#        format          "44100:16:2"
+#        options         "dev=dmixer"
+#        device          "dev=dmixer"
+        mixer_type      "software"
+#        mixer_device    "default"    # optional
+#        mixer_control    "PCM"        # optional
+}
+```
