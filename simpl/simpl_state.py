@@ -35,6 +35,10 @@ class SimplState(object):
         self._music_player.set_volume(self._act_vol)
         self.say('Simpl Mjusik Pläia ist bereit')
 
+    def reconnect_mpd(self):
+        """Connect to MPD"""
+        self._music_player.connect()
+
     def nextState(self, cls):
         """Switching to next state"""
         self._logger.debug('-> %s' % (cls.__name__,), )

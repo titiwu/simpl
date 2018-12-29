@@ -9,7 +9,7 @@ def main(args=None):
     """The main routine."""
     logger = logging.getLogger(__name__)
     handler = logging.StreamHandler(sys.stdout)
-    formatter = logging.Formatter("%(asctime)s [%(levelname)s]: %(message)s",
+    formatter = logging.Formatter("%(asctime)s [%(levelname)s]: %(name)s - %(message)s",
                                   "%H:%M:%S")
     handler.setFormatter(formatter)
     logger.addHandler(handler)
