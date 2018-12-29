@@ -23,8 +23,11 @@ class MusicPlayer(object):
         # network timeout in seconds (floats allowed), default: None
         self._client.timeout = 10
         # timeout for fetching the result of the idle command is handled
-        # seperately, default: None
+        # separately, default: None
         self._client.idletimeout = None
+        self.connect()
+
+    def connect(self):
         self._client.connect("localhost", 6600)
         self._logger.debug("Connected to MPD " + self._client.mpd_version)
 
@@ -94,7 +97,7 @@ class MusicPlayer(object):
                 file_list = self.get_files(dir['directory'], 'file')
                 playlist_list = self.get_files(dir['directory'], 'playlist')
                 dir_list.append({'directory': dir['directory'], 'files': file_list, 'playlists': playlist_list})
-        return (dir_list)
+        return dir_list
 
     def get_files(self, directory, type):
         files = self._client.lsinfo(directory)
@@ -102,7 +105,7 @@ class MusicPlayer(object):
         for dir in files:
             if type in dir:
                 file_list.append(dir[type].replace(directory + '/', ''))
-        return (file_list)
+        return file_list
 
     def __del__(self):
         self._client.close()
@@ -116,4 +119,4 @@ if __name__ == "__main__":
     print(music_player.get_act_song_nr())
     print(music_player.get_act_folder())
     # print(music_player.switch_to_playlist('04-Radio/bayern_2.m3u'))
-    del (music_player)
+    del music_player
