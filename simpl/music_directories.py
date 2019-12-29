@@ -97,7 +97,7 @@ class SimplDirectories(object):
                 dir_text = dir_text.strip()
                 self._directories[dir_number] = MusicFolder(dir_text, dir_name, directory['files'],
                                                             directory['playlists'])
-        self._logger.info(str(len(self._directories)) + 'simpl directories found')
+        self._logger.info(str(len(self._directories)) + ' simpl directories found')
 
 
 class MusicFolder(object):

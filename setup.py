@@ -4,6 +4,7 @@ Created on Thu Jan 12 21:20:02 2017
 
 @author: mb
 """
+from simpl import __version__
 
 try:
     from setuptools import setup
@@ -16,8 +17,8 @@ config = {
     'url': 'https://github.com/titiwu/simpl',
     'download_url': 'https://github.com/titiwu/simpl',
     'author_email': 'matthias.busl@gmail.com',
-    'version': '0.1',
-    'install_requires': ['nose',  'mpd'],
+    'version': __version__,
+    'install_requires': ['mpd'],
     'packages': ['simpl'],
     'scripts': [],
     'name': 'simpl'

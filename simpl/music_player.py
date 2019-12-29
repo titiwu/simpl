@@ -10,6 +10,20 @@ Created on Thu Jan 19 21:41:17 2017.
 import mpd
 import logging
 import time
+import functools
+
+
+def try_command(func):
+    """Try to execute command and catch errors"""
+
+    @functools.wraps(func)
+    def wrapper_try(self, *args, **kwargs):
+        try:
+            func(self, *args, **kwargs)
+        except mpd.CommandError as e:
+            self._logger.exception("Command error to MPD:", e.__str__())
+
+    return wrapper_try
 
 
 class MusicPlayer(object):
@@ -60,10 +74,12 @@ class MusicPlayer(object):
         """Pause playing"""
         self._client.pause()
 
+    @try_command
     def play_next(self):
         """Play next song"""
         self._client.next()
 
+    @try_command
     def play_previous(self):
         """Play previous song"""
         self._client.previous()

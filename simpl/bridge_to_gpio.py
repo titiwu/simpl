@@ -4,9 +4,13 @@ Created on Thu Jan 19 21:42:50 2017
 
 @author: mb
 """
+from . import simpl
+
 import logging
 import time
 import sys
+import queue
+
 import RPi.GPIO as GPIO
 
 
@@ -14,20 +18,41 @@ class BridgeToGpio(object):
     """
     Use a button matrix
     GPIO IN 
-           12  16  20  21
-             |     |      |    |
-     6   - 1    2     3    4
-     13 - 5    6     7    8
-     19 - 9   10   11  12
-     26 - 13 14   15  16
+     |IN >| 23 | 24 | 25 | 16 |
+     |----|----|----|----|----|
+     | 22 |  1 |  2 |  3 |  4 |
+     |  5 |  5 |  6 |  7 |  8 |
+     |  6 |  9 | 10 | 11 | 12 |
+     | 26 | 13 | 14 | 15 | 16 |
+     |OUT^|----|----|----|----|
      GPIO
      OUT
     """
-    COL_INPUT_BMC_NR = (12, 16, 20, 21)
-    ROW_OUTPUT_BMC_NR = (6, 13, 19, 26)
+    COL_INPUT_BMC_NR = (23, 24, 25, 16)
+    ROW_OUTPUT_BMC_NR = (22, 5, 6, 26)
 
-    def __init__(self):
+    BUTTON_NR_TO_SIMPL_BUTTON = {
+        1: simpl.Buttons.ButtonOne,
+        2: simpl.Buttons.ButtonTwo,
+        3: simpl.Buttons.ButtonThree,
+        4: simpl.Buttons.VolumeUp,
+        5: simpl.Buttons.ButtonFour,
+        6: simpl.Buttons.ButtonFive,
+        7: simpl.Buttons.ButtonSix,
+        8: simpl.Buttons.VolumeDown,
+        9: simpl.Buttons.ButtonSeven,
+        10: simpl.Buttons.ButtonEight,
+        11: simpl.Buttons.ButtonNine,
+        12: simpl.Buttons.Mode,
+        13: simpl.Buttons.Previous,
+        14: simpl.Buttons.Stop,
+        15: simpl.Buttons.Play,
+        16: simpl.Buttons.Next
+    }
+
+    def __init__(self, event_queue: queue.Queue):
         self._logger = logging.getLogger(__name__)
+        self.event_queue = event_queue
         # use Broadcom pin numbering convention
         GPIO.setmode(GPIO.BCM)
         # Set up the GPIO channels - one input and one output
@@ -47,7 +72,7 @@ class BridgeToGpio(object):
         self._logger.debug('GPIO setup done')
 
     def button_in_col_pressed(self, channel):
-        ''' Set rows high one by one to see when the input disapears '''
+        '''Set rows high one by one to see when the input disapears'''
         self._logger.debug('Event on input ' + str(channel))
         for row_nr in range(0, len(self.ROW_OUTPUT_BMC_NR)):
             GPIO.output(self.ROW_OUTPUT_BMC_NR[row_nr], GPIO.HIGH)
@@ -56,6 +81,7 @@ class BridgeToGpio(object):
                 col = self.COL_INPUT_BMC_NR.index(channel)
                 button_nr = row_nr * len(self.COL_INPUT_BMC_NR) + col + 1
                 self._logger.debug('Button Nr is ' + str(button_nr))
+                self.event_queue.put(self.BUTTON_NR_TO_SIMPL_BUTTON[button_nr])
                 break
         GPIO.output(self.ROW_OUTPUT_BMC_NR, GPIO.LOW)
         # TODO Setters for callback functions for each button number
@@ -75,10 +101,14 @@ if __name__ == "__main__":
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
 
-    SimplGpio = BridgeToGpio()
+    test_queue = queue.Queue()
+
+    SimplGpio = BridgeToGpio(test_queue)
 
     try:
         while (True):
-            time.sleep(1);
+            time.sleep(1)
+            with test_queue.mutex:
+                test_queue.queue.clear()
     except (KeyboardInterrupt, SystemExit):
         SimplGpio.delete()  # clean up GPIO on CTRL+C exit
